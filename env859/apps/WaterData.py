@@ -1,4 +1,4 @@
-# app.py
+# WaterData.py
 #
 # A Bokeh-based application that reads water withdrawal data
 # and creates a simple interface to plot selected summaries
@@ -37,7 +37,7 @@ def get_data(df,type):
 
 def updatePlot(attrname,old,new):
     '''Callback function that updates the data source based on the item selected'''
-    source.data = get_data(df,select.value)
+    source.data = get_data(df,new)
     
 ##Code------------------------------------------------------------------------
 #Read the data in, grouped and summarized by the given field
