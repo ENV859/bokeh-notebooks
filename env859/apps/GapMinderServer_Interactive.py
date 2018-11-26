@@ -21,11 +21,12 @@ from bokeh.models import (
     HoverTool, 
     LinearInterpolator, 
     CategoricalColorMapper,
+    NumeralTickFormatter,
     Slider #<---------------Import the Bokeh slider widget
 )
 
-#Import all color palettes
-from bokeh.palettes import *
+#Import the Spectral6 palette
+from bokeh.palettes import Spectral6
 
 #Import Bokeh layout column -- to arrange items on our page
 from bokeh.layouts import column
@@ -41,8 +42,14 @@ theCDS = ColumnDataSource(data.loc[2010])
 #Create a styling dictionary for our plot
 PLOT_OPS = {'title':'2010',
             'height':500,
-            'width':1000,
-            'x_axis_type':'log'}
+            'width':900,
+            'x_axis_type':'log',
+            'x_axis_label':'Log(Income)',
+            'y_axis_label':'Life expectancy (years)',
+            'x_range':(100,100000),
+            'y_range':(0,100),
+            'toolbar_location':"below"
+           }
 
 #Create the population size mapper
 size_mapper = LinearInterpolator(x=[data.loc[2010]['population'].min(),
@@ -65,6 +72,8 @@ p.circle(x='income',
         )
 p.legend.border_line_color = 'red'
 p.right = p.legend
+p.xaxis.formatter = NumeralTickFormatter(format='$0,')
+p.add_tools(hover)
 
 ##----------UPDATE FUNCTION------------
 def update(attr, old, new):

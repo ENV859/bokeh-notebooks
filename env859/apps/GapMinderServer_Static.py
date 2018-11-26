@@ -14,12 +14,13 @@ from bokeh.plotting import figure
 from bokeh.models import (
     ColumnDataSource, 
     HoverTool, 
-    LinearInterpolator, 
-    CategoricalColorMapper
+    LinearInterpolator,
+    CategoricalColorMapper,
+    NumeralTickFormatter
 )
 
-#Import all color palettes
-from bokeh.palettes import *
+#Import the Spectral6 palette
+from bokeh.palettes import Spectral6
 
 ##----------DATA-------------------------    
 #import the data as a dataframe then as a ColumnDataSource object
@@ -31,8 +32,14 @@ theCDS = ColumnDataSource(data.loc[2010])
 #Create a styling dictionary for our plot
 PLOT_OPS = {'title':'2010',
             'height':500,
-            'width':1000,
-            'x_axis_type':'log'}
+            'width':900,
+            'x_axis_type':'log',
+            'x_axis_label':'Log(Income)',
+            'y_axis_label':'Life expectancy (years)',
+            'x_range':(100,100000),
+            'y_range':(0,100),
+            'toolbar_location':"below"
+           }
 
 #Create the population size mapper
 size_mapper = LinearInterpolator(x=[data.loc[2010]['population'].min(),
@@ -43,6 +50,7 @@ size_mapper = LinearInterpolator(x=[data.loc[2010]['population'].min(),
 color_mapper = CategoricalColorMapper(factors=data.loc[2010]['region'].unique(),
                                       palette=Spectral6)
 
+#Construct the plot (just as in GapMinder-03-Interactivity.ipynb)
 hover = HoverTool(tooltips='@Country')
 p = figure(**PLOT_OPS)
 p.circle(x='income',
@@ -55,6 +63,8 @@ p.circle(x='income',
         )
 p.legend.border_line_color = 'red'
 p.right = p.legend
+p.xaxis.formatter = NumeralTickFormatter(format='$0,')
+p.add_tools(hover)
 
-
+#Add the plot to the served document
 curdoc().add_root(p)
